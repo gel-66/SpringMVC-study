@@ -1,13 +1,21 @@
 package com.gary.mvcdemo.controller;
 
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.gary.mvcdemo.model.Course;
 import com.gary.mvcdemo.service.CourseService;
@@ -15,8 +23,8 @@ import com.gary.mvcdemo.service.CourseService;
 @Controller
 @RequestMapping("/courses")
 public class CourseController {
-	private CourseService courseService;
 	private static Logger log = LoggerFactory.getLogger(CourseController.class);
+	private CourseService courseService;
 	@Autowired
 	public void setCourseService(CourseService courseService) {
 		this.courseService = courseService;
@@ -30,4 +38,48 @@ public class CourseController {
 		model.addAttribute(course);
 		return "course_overview";
 	}
+	//本方法将处理/courses/view?123  {路径变量}形式的URL
+ 	@RequestMapping(value="/view2/{courseId}",method=RequestMethod.GET)
+	public String viewCourse2(@PathVariable("courseId")Integer courseId, Map<String,Object> model){
+		log.debug("In viewCourse2,courseId = {}",courseId);
+		Course course = courseService.getCoursebyId(courseId);
+		model.put("course", course);
+		return "course_overview";
+	}
+ 	//HttpServletRequest
+ 	///courses/view3?courseId=123
+ 	@RequestMapping("view3")
+ 	public String viewCourse3(HttpServletRequest request){
+ 		Integer courseId = Integer.valueOf(request.getParameter("courseId"));
+ 		log.debug("In viewCourse3,courseId = {}",courseId);
+		Course course = courseService.getCoursebyId(courseId);
+		request.setAttribute("course", course);
+ 		return "course_overview";
+ 	}
+ 	//如何映射多目录结构的管理方式
+ 	@RequestMapping(value="/admin",method=RequestMethod.GET, params = "add")
+ 	public String createCourse(){
+ 		return "course_admin/edit";
+ 	}
+ 	
+ 	//binding
+ 	@RequestMapping(value="/save",method=RequestMethod.POST)
+ 	public String doSave(@ModelAttribute Course course){
+ 		log.debug("Info of Course:");
+ 		log.debug(ReflectionToStringBuilder.toString(course));
+ 		//在此进行业务操作，比如数据库持久化
+ 		course.setCourseId(123);
+ 		return "redirect:view2/"+course.getCourseId();
+ 	}
+ 	//文件上传
+ 	@RequestMapping(value="/upload", method=RequestMethod.GET)
+ 	public String showUploadPage(){
+ 		return "course_admin/file";
+ 	}
+ 	
+ 	@RequestMapping(value="/doUpload", method=RequestMethod.POST)
+ 	public String doUploadFile(MultipartFile file){
+ 		return "success";
+ 	}
+ 	
 }

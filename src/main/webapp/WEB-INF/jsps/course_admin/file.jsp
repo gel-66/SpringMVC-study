@@ -12,7 +12,7 @@
 <div align="center">
 
 <h1>上传附件</h1>
-<form method="post" action="/courses/doUpload" enctype="multipart/form-data">
+<form method="post" action="/courses/doUpload" enctype="multipart/form-data"><!-- 文件上传必须有的一个属性，否则文件上传无法完成工作 -->
 <input type="file" name="file"/>
 <input type="submit"/>
 </form>
