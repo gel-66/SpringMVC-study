@@ -48,5 +48,27 @@
         	<property name="resolveLazily" value="true"/>
         </bean>
         
+        <!-- 配置ViewResolver。 可以用多个ViewResolver。 使用order属性排序。 InternalResourceViewResolver放在最后。 -->
+        <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		   <property name="mediaTypes">
+		      <value>
+		         html=text/html
+		         json=application/json
+		         json=application/callback
+		         image=image/*
+		      </value>
+		   </property>
+		   <property name="defaultContentType" value="text/html"/>
+		</bean>
+		
+		<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		   <property name="contentNegotiationManager" ref="contentNegotiationManager"/>
+		   <property name="defaultViews">
+		      <list>
+		         <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
+		      </list>
+		   </property>
+		</bean>
+        
  </beans>  
   	
