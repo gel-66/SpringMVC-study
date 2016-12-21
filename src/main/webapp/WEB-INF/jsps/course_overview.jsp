@@ -12,7 +12,7 @@
 	type="text/css" />
 </head>
 <body>
-
+	${msg } 
 	<div id="main">
 
 		<div class="newcontainer" id="course_intro">

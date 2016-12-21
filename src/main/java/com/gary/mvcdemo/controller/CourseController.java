@@ -42,6 +42,7 @@ public class CourseController {
 		log.debug("In viewCourse,courseId = {}",courseId);
 		Course course = courseService.getCoursebyId(courseId);
 		model.addAttribute(course);
+		model.addAttribute("msg", "viewCourse-msg...");
 		return "course_overview";
 	}
 	//本方法将处理/courses/view?123  {路径变量}形式的URL

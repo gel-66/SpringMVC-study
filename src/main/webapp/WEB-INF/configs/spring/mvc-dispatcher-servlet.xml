@@ -69,6 +69,17 @@
 		      </list>
 		   </property>
 		</bean>
+		
+		<!-- 注册拦截器 -->
+		<mvc:interceptors>
+			<!-- 拦截规则 -->
+			<!-- <mvc:interceptor>
+				<mvc:mapping path="/*/view"/>		
+				<bean class="com.gary.mvcdemo.interceptor.Test1Interceptor"></bean>
+			</mvc:interceptor> -->
+			<bean class="com.gary.mvcdemo.interceptor.Test1Interceptor"></bean>
+			<bean class="com.gary.mvcdemo.interceptor.Test2Interceptor"></bean>
+		</mvc:interceptors>
         
  </beans>  
   	
